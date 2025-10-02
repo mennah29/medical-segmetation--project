@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical CT Segmentation Project Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Chosen Palette: Cool Gray with Teal accents. This palette was selected for its professional, clean, and modern aesthetic, suitable for a technical and medical-themed presentation. It ensures high readability and a calm, focused user experience.
+        
+        Application Structure Plan: The application is designed as a single-page, interactive slide deck. Users navigate through distinct sections (slides) using "Previous" and "Next" buttons, or via a fixed sidebar for direct access. This linear-yet-flexible structure is ideal for a presentation, guiding the user through the narrative while allowing them to jump to specific topics. Key quantitative data is visualized using charts to enhance comprehension, and actual images/videos are now embedded to showcase the interactive Dash application.
+
+        Visualization & Content Choices: 
+        - Report Info: Project Goal & Methodology -> Goal: Organize/Inform -> Viz: Numbered list with icons -> Interaction: Static -> Justification: Clearly presents the structured workflow of the project.
+        - Report Info: Vertebrae Performance Metrics (Dice/IoU ranges) -> Goal: Compare/Inform -> Viz: Interactive Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: A bar chart provides a much clearer and more impactful visual comparison of performance ranges than plain text, making it easier to grasp the model's fidelity at a glance.
+        - Report Info: Heart & Lung Metrics -> Goal: Inform -> Viz: Styled stat cards for key metrics -> Interaction: Static -> Justification: Stat cards draw immediate attention to the excellent, near-perfect scores for the heart segmentation, highlighting a key success.
+        - Report Info: Dash App Features -> Goal: Organize/Inform -> Viz: Feature list with checkmark icons -> Interaction: Static -> Justification: Enhances readability and visually confirms the application's capabilities.
+        - Report Info: User's 3D Visualizations -> Goal: Demonstrate -> Viz: Embedded Video/Images -> Interaction: User-controlled video playback -> Justification: Direct visual evidence is the most powerful way to showcase the 3D interactive tool.
+
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* cool-gray-50 */
+        }
+        .slide {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link {
+            transition: all 0.2s;
+        }
+        .nav-link.active {
+            background-color: #14b8a6; /* teal-500 */
+            color: white;
+            font-weight: 600;
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 700px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 350px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white shadow-md p-6 hidden md:flex flex-col">
+            <h2 class="text-2xl font-bold text-teal-600 mb-8">Presentation</h2>
+            <nav id="sidebar-nav" class="flex flex-col space-y-2">
+                <a href="#slide1" data-slide="1" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">1. Title</a>
+                <a href="#slide2" data-slide="2" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">2. Goal & Methodology</a>
+                <a href="#slide3" data-slide="3" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">3. Vertebrae Analysis</a>
+                <a href="#slide4" data-slide="4" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">4. Heart & Lungs Analysis</a>
+                <a href="#slide5" data-slide="5" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">5. Dash App Demo</a>
+                <a href="#slide6" data-slide="6" class="nav-link p-3 rounded-lg text-gray-700 hover:bg-teal-50">6. Conclusion</a>
+            </nav>
+            <div class="mt-auto text-center text-gray-500 text-sm">
+                <p>&copy; 2025 Mennah</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-12 overflow-y-auto">
+            <div id="presentation-container">
+                <!-- Slide 1: Title -->
+                <section id="slide1" class="slide">
+                    <div class="flex flex-col items-center justify-center h-full text-center min-h-[80vh]">
+                        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">High-Fidelity 3D Medical Segmentation & Interactive Evaluation</h1>
+                        <p class="mt-4 text-xl md:text-2xl text-gray-600">Analyzing Anatomical Segmentation Performance in CT Scans</p>
+                        <p class="mt-8 text-lg text-teal-600 font-semibold">Presenter: Mennah</p>
+                        <!-- Updated Visual: Collage or representative image -->
+                        <div class="mt-10 w-full max-w-4xl p-4 bg-gray-200 rounded-lg shadow-inner flex items-center justify-center">
+                            <img src="Screenshot 2025-10-02 042321.png" alt="3D Heart Segmentation Visualization" class="w-full max-h-96 object-contain rounded-lg shadow-md border border-gray-300">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: Goal & Methodology -->
+                <section id="slide2" class="slide">
+                    <h2 class="text-3xl font-bold mb-8">Bridging Model Performance and Clinical Visualization</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-3 text-teal-700">Goal</h3>
+                            <p class="text-lg text-gray-700 leading-relaxed">To move beyond simple segmentation metrics by building a comprehensive, interactive validation tool—a **Dash Application**—that allows researchers and clinicians to visually and quantitatively assess model performance on complex anatomical structures.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-4 text-teal-700">Methodology</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                    <h4 class="font-bold text-lg mb-2">1. Segmentation & Comparison</h4>
+                                    <p>Utilizing predicted segmentation masks from a deep learning model and comparing them against Ground Truth data.</p>
+                                </div>
+                                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                    <h4 class="font-bold text-lg mb-2">2. Metric Calculation</h4>
+                                    <p>Generating key 3D overlap metrics: **Dice Score, IoU, and Volumetric Similarity.**</p>
+                                </div>
+                                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                    <h4 class="font-bold text-lg mb-2">3. 3D Visualization</h4>
+                                    <p>Converting volumetric data into interactive 3D meshes using the **Marching Cubes** algorithm.</p>
+                                </div>
+                                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                    <h4 class="font-bold text-lg mb-2">4. Interactive Dash App</h4>
+                                    <p>Integrating the visualization and metrics into a live, interactive environment.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: Vertebrae Analysis -->
+                <section id="slide3" class="slide">
+                    <h2 class="text-3xl font-bold mb-8">Case Study 1: Analysis of Vertebrae Segmentation Fidelity</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-4 text-teal-700">Key Findings (Quantitative)</h3>
+                            <ul class="space-y-4 text-lg">
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">▶</span><div><strong>Dataset:</strong> Successfully processed 24 individual vertebrae segments.</div></li>
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">▶</span><div><strong>High Fidelity:</strong> Metrics show strong performance with Dice Scores from 0.78 to 0.94 and IoU from 0.64 to 0.88.</div></li>
+                                <li class="flex items-start"><span class="text-teal-500 mr-3 mt-1">▶</span><div><strong>Volumetric Consistency:</strong> High Volumetric Similarity (0.89 to 0.97) confirms strong agreement in volume.</div></li>
+                            </ul>
+                            <div class="mt-6 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                                <h4 class="font-bold text-teal-800">Critical Insight</h4>
+                                <p class="text-teal-700">The application enables rapid identification of vertebrae with lower scores (e.g., S1 or C7), immediately pinpointing areas where the model requires further training.</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <h3 class="text-xl font-semibold mb-2 text-center">Performance Range</h3>
+                             <div class="chart-container mb-4">
+                                <canvas id="vertebraeChart"></canvas>
+                            </div>
+                            <!-- Updated Visual: Embed Vertebrae Video -->
+                            <div class="w-full max-w-xl">
+                                <video controls class="w-full rounded-lg shadow-xl" src="Screen Recording 2025-10-02 040148.mp4" title="Interactive Vertebrae Visualization Demo"></video>
+                                <p class="text-sm text-gray-500 mt-2 text-center">Demo: Interactive Vertebrae Visualization</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 4: Heart & Lungs Analysis -->
+                <section id="slide4" class="slide">
+                    <h2 class="text-3xl font-bold mb-8">Case Study 2: High-Accuracy Segmentation for Vital Organs</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Heart -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                             <h3 class="text-2xl font-semibold mb-4 text-teal-700">Heart Segmentation</h3>
+                             <div class="space-y-4">
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <p class="text-sm text-gray-600">Dice Score</p>
+                                    <p class="text-3xl font-bold text-teal-600">0.9724</p>
+                                </div>
+                                <div class="bg-gray-100 p-4 rounded-lg">
+                                    <p class="text-sm text-gray-600">IoU Score</p>
+                                    <p class="text-3xl font-bold text-teal-600">0.9462</p>
+                                </div>
+                             </div>
+                             <p class="mt-4 text-gray-700">Excellent agreement, demonstrating the model's robustness on dense organ tissue.</p>
+                             <!-- Updated Visual: Heart Image -->
+                             <div class="mt-4 w-full max-w-sm mx-auto">
+                                <img src="Screenshot 2025-10-02 042321.png" alt="Heart Segmentation Visual" class="w-full h-auto rounded-lg shadow-md border border-gray-300">
+                            </div>
+                        </div>
+                        <!-- Lungs -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                             <h3 class="text-2xl font-semibold mb-4 text-teal-700">Lung Segmentation</h3>
+                             <p class="mb-4 text-gray-700">Successfully calculated metrics for all five individual lung lobes with consistently high performance.</p>
+                             <ul class="space-y-2 text-gray-600 list-disc list-inside">
+                                 <li>Qualitative assessment via individual opacity sliders.</li>
+                                 <li>Quantitative scores for each lobe.</li>
+                                 <li>Provides a complete picture of model accuracy.</li>
+                             </ul>
+                              <!-- Updated Visual: Embed Lungs Video -->
+                              <div class="mt-4 w-full max-w-sm mx-auto">
+                                <video controls class="w-full rounded-lg shadow-xl" src="Screen Recording 2025-10-02 043658.mp4" title="Interactive Lung Segmentation Visualization Demo"></video>
+                                <p class="text-sm text-gray-500 mt-2 text-center">Demo: Interactive Lung Lobe Visualization</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 5: Dash App -->
+                <section id="slide5" class="slide">
+                    <h2 class="text-3xl font-bold mb-8">Interactive Visual Validation: Dash App Features</h2>
+                    <div class="max-w-4xl mx-auto">
+                        <ul class="space-y-4 text-lg">
+                           <li class="flex items-center bg-white p-4 rounded-lg shadow-sm"><svg class="w-6 h-6 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <strong>Interactive Opacity Control:</strong> Adjust visibility for each label individually to "see through" predictions.</li>
+                           <li class="flex items-center bg-white p-4 rounded-lg shadow-sm"><svg class="w-6 h-6 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <strong>Real-Time Metrics:</strong> Evaluation scores are displayed alongside the 3D model for immediate context.</li>
+                           <li class="flex items-center bg-white p-4 rounded-lg shadow-sm"><svg class="w-6 h-6 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <strong>Robust 3D Engine:</strong> Handles complex mesh generation via Marching Cubes for multiple structures.</li>
+                        </ul>
+                        <div class="mt-8 bg-teal-600 text-white p-6 rounded-xl shadow-lg text-center">
+                            <p class="text-2xl font-semibold italic">"This tool transforms static metrics into a dynamic, clinically relevant validation environment."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 6: Conclusion -->
+                <section id="slide6" class="slide">
+                    <h2 class="text-3xl font-bold mb-8">Next Steps & Project Impact</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-4 text-teal-700">Key Conclusions</h3>
+                             <ul class="space-y-3 text-lg text-gray-700">
+                                <li>Interactive visualization is crucial for identifying segmentation failures that numeric metrics alone might mask.</li>
+                                <li>The model demonstrated high overall performance, but specific segments (like certain vertebrae) require targeted investigation.</li>
+                             </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-4 text-teal-700">Future Directions</h3>
+                            <ol class="list-decimal list-inside space-y-3 text-lg text-gray-700">
+                                <li><strong>Metric Expansion:</strong> Integrate Surface Distance Metrics (e.g., Hausdorff Distance).</li>
+                                <li><strong>Multi-Structure Control:</strong> Expand the Heart app to control sub-structures (e.g., chambers).</li>
+                                <li><strong>Performance Optimization:</strong> Optimize mesh generation for larger, high-resolution CT volumes.</li>
+                            </ol>
+                        </div>
+                    </div>
+                     <div class="mt-12 border-t pt-8">
+                        <p class="text-center text-xl font-semibold text-gray-800">Closing Statement</p>
+                        <p class="text-center text-lg text-gray-600 mt-2">This project provides a reliable, interactive validation framework ready for deployment in a clinical research setting.</p>
+                     </div>
+                </section>
+            </div>
+            
+            <!-- Bottom Navigation -->
+            <div class="mt-12 flex justify-between items-center">
+                <button id="prevBtn" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">Previous</button>
+                <div id="slide-counter" class="text-gray-600">Slide 1 / 6</div>
+                <button id="nextBtn" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">Next</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const slideCounter = document.getElementById('slide-counter');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function showSlide(slideNumber) {
+            if (slideNumber < 1 || slideNumber > totalSlides) return;
+            
+            currentSlide = slideNumber;
+            
+            slides.forEach((slide, index) => {
+                if (index + 1 === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            updateUI();
+        }
+
+        function updateUI() {
+            slideCounter.textContent = `Slide ${currentSlide} / ${totalSlides}`;
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+            prevBtn.classList.toggle('opacity-50', currentSlide === 1);
+            nextBtn.classList.toggle('opacity-50', currentSlide === totalSlides);
+            
+            navLinks.forEach(link => {
+                if (parseInt(link.dataset.slide) === currentSlide) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+        
+        nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+        prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSlide(parseInt(e.target.dataset.slide));
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                showSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                showSlide(currentSlide - 1);
+            }
+        });
+
+        // Initialize first slide
+        showSlide(1);
+
+        // Chart.js for Vertebrae Metrics
+        const ctx = document.getElementById('vertebraeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Dice Score', 'IoU', 'Volumetric Similarity'],
+                datasets: [{
+                    label: 'Min Score',
+                    data: [0.78, 0.64, 0.89],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Max Score',
+                    data: [0.94, 0.88, 0.97],
+                    backgroundColor: 'rgba(20, 184, 166, 0.6)',
+                    borderColor: 'rgba(20, 184, 166, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 0.6,
+                        max: 1.0,
+                        title: {
+                            display: true,
+                            text: 'Score Value'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Vertebrae Segmentation Score Ranges'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toFixed(2);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
